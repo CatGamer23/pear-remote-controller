@@ -1,0 +1,466 @@
+:root {
+  /* Discord/Signal-inspired Slate Grey Dark Theme */
+  --bg-color: #1e1f22;
+  --card-bg: #2b2d31;
+  --text-primary: #f2f3f5;
+  --text-secondary: #949ba4;
+  --accent-red: #5865f2;
+  --accent-red-hover: color-mix(in srgb, var(--accent-red) 85%, black);
+  --button-bg: #313338;
+  --button-hover: #383a40;
+  --card-shadow: rgba(0, 0, 0, 0.4);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 32px 24px;
+}
+
+/* DESKTOP LAYOUT (Grid Areas) */
+.card {
+  position: relative;
+  background: var(--card-bg);
+  padding: 52px;
+  border-radius: 36px;
+  width: 100%;
+  max-width: 1020px;
+  box-shadow: 0 24px 48px var(--card-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: grid;
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  grid-template-rows: auto auto auto 1fr auto;
+  grid-template-areas:
+    "art volume"
+    "art track"
+    "art upnext"
+    "art progress"
+    "art controls";
+  column-gap: 52px;
+  row-gap: 12px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.album-art-container {
+  grid-area: art;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  user-select: none;
+  overflow: hidden;
+  position: relative;
+  border-radius: 26px;
+}
+
+.volume-container {
+  grid-area: volume;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: var(--button-bg);
+  padding: 12px 18px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.track-info {
+  grid-area: track;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 4px;
+  text-align: left;
+  overflow: hidden;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 1.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.up-next-container {
+  grid-area: upnext;
+  width: 100%;
+  min-width: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: var(--button-bg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 6px 14px;
+  border-radius: 10px;
+  margin-top: 36px;
+  margin-bottom: -4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &[hidden] {
+    display: none;
+  }
+
+  span {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+}
+
+.progress-container {
+  grid-area: progress;
+  width: 100%;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controls {
+  grid-area: controls;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* Component Styling */
+.btn-mute {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  svg {
+    fill: currentColor;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Volume Slider & Custom Thumb */
+.volume-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  cursor: pointer;
+
+  /* WebKit Thumb (Chrome, Safari, Edge) */
+  &::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-red);
+    border: 2px solid var(--card-bg);
+    box-shadow: 0 0 0 2px var(--accent-red);
+    transition:
+      transform 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover {
+      transform: scale(1.25);
+      background: var(--accent-red-hover);
+      box-shadow: 0 0 8px rgba(88, 101, 242, 0.6);
+    }
+  }
+
+  /* Firefox Thumb */
+  &::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-red);
+    border: 2px solid var(--card-bg);
+    box-shadow: 0 0 0 2px var(--accent-red);
+    transition:
+      transform 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover {
+      transform: scale(1.25);
+      background: var(--accent-red-hover);
+      box-shadow: 0 0 8px rgba(88, 101, 242, 0.6);
+    }
+  }
+
+  &::-moz-range-track {
+    background: transparent;
+    border: none;
+  }
+}
+
+.album-art {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 26px;
+  object-fit: cover;
+  background-color: var(--bg-color);
+  box-shadow: 0 12px 32px var(--card-shadow);
+  display: block;
+}
+
+.seek-overlay {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+
+  &.right {
+    inset: 0 0 0 auto;
+  }
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+.progress-bar-wrapper {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  touch-action: none;
+}
+
+.progress-bar-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Wavy Seek Bar Paths (Restored 4px stroke width) */
+.track-bg {
+  stroke: var(--button-bg);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.wave-fill {
+  stroke: var(--accent-red);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.time-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 0 2px;
+}
+
+.btn {
+  background: var(--button-bg);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  height: 64px;
+  padding: 0 32px;
+  border-radius: 9999px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    background: var(--button-hover);
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  svg {
+    fill: currentColor;
+    width: 28px;
+    height: 28px;
+  }
+
+  &.btn-primary {
+    background: var(--accent-red);
+    height: 72px;
+    padding: 0 40px;
+    flex: 1.25;
+    box-shadow: 0 6px 20px rgba(88, 101, 242, 0.3);
+    border: none;
+
+    &:hover {
+      background: var(--accent-red-hover);
+    }
+
+    svg {
+      width: 34px;
+      height: 34px;
+    }
+  }
+}
+
+/* MOBILE LAYOUT (Stack Mode) */
+@media (width <= 600px) {
+  body {
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    align-items: stretch;
+    height: 100dvh;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    justify-content: space-between;
+    padding: max(16px, env(safe-area-inset-top)) 20px
+      max(24px, env(safe-area-inset-bottom));
+    column-gap: 0;
+    row-gap: 0;
+    text-align: center;
+  }
+
+  .volume-container {
+    margin-bottom: 10px;
+    padding: 8px 14px;
+  }
+
+  .album-art-container {
+    max-width: 100%;
+    max-height: 38dvh;
+    width: auto;
+    height: auto;
+    margin-bottom: 10px;
+    flex-shrink: 1;
+  }
+
+  .album-art {
+    max-height: 38dvh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .track-info {
+    margin-bottom: 10px;
+    flex-shrink: 0;
+    text-align: center;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  .up-next-container {
+    margin-top: 0;
+    margin-bottom: 12px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    border: none;
+  }
+
+  .progress-container {
+    margin-bottom: 12px;
+  }
+
+  .controls {
+    margin-top: 0;
+    gap: 12px;
+  }
+
+  .btn {
+    height: 56px;
+    padding: 0 24px;
+
+    svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    &.btn-primary {
+      height: 64px;
+      padding: 0 32px;
+
+      svg {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  }
+}
