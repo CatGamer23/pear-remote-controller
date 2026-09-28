@@ -1,6 +1,6 @@
 #!/bin/bash
 # Navigate to the directory where this script is located
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 
 # Get local IP address (Wi-Fi interface en0, or ethernet en1)
 PORT=80

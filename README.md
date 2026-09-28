@@ -1,6 +1,7 @@
 # Pear Remote Controller 🎵
 
-A sleek, Discord-inspired web-based remote control for Pear Desktop's music player. Control playback directly from your phone or secondary device on the same Wi-Fi network.
+A sleek, Discord-inspired web-based remote control for Pear Desktop's music player. Control playback directly from your
+phone or secondary device on the same Wi-Fi network.
 
 ![Discord-inspired theme preview](https://placehold.co/600x300/2b2d31/5865f2?text=YT+Music+Remote)
 
@@ -9,10 +10,10 @@ A sleek, Discord-inspired web-based remote control for Pear Desktop's music play
 - 🎨 **Modern Design** - Discord/Signal-inspired dark theme
 - 📱 **Mobile-Friendly** - Responsive layout for phones and tablets
 - 🎮 **Full Playback Control**
-  - Play/Pause with smooth animations
-  - Next/Previous track navigation
-  - Seek any position in the current track
-  - Volume control with mute toggle
+    - Play/Pause with smooth animations
+    - Next/Previous track navigation
+    - Seek any position in the current track
+    - Volume control with mute toggle
 - 🖼️ **Album Art Display** - Shows cover art dynamically
 - 🔀 **Queue Navigation** - Tap left/right on album art to skip tracks
 - 📺 **Up Next Queue** - See what's coming up
@@ -21,8 +22,8 @@ A sleek, Discord-inspired web-based remote control for Pear Desktop's music play
 ## Controls 🎛️
 
 | Button               | Action                           |
-| -------------------- | -------------------------------- |
-| ▶️ Play/Pause        | Toggle playback state            |
+|----------------------|----------------------------------|
+| ▶️ Play/Pause         | Toggle playback state            |
 | ⏮ Previous           | Skip to previous track           |
 | ⏭ Next               | Skip to next track               |
 | 🔇 Mute              | Toggle audio mute                |
@@ -66,7 +67,8 @@ The script will:
 
 ### Permissions ⚠️
 
-The first time you load the page, you'll need to approve the connection on Pear Desktop. Follow the authentication prompts shown in the browser.
+The first time you load the page, you'll need to approve the connection on Pear Desktop. Follow the authentication
+prompts shown in the browser.
 
 ## Requirements 🔧
 
@@ -91,10 +93,10 @@ The interface updates automatically as you control playback from your phone.
 
 ```css
 :root {
-  --bg-color: #1e1f22; /* Background */
-  --card-bg: #2b2d31; /* Card background */
-  --text-primary: #f2f3f5; /* Primary text */
-  --accent-red: #5865f2; /* Accent color (Discord blurple) */
+    --bg-color: #1e1f22; /* Background */
+    --card-bg: #2b2d31; /* Card background */
+    --text-primary: #f2f3f5; /* Primary text */
+    --accent-red: #5865f2; /* Accent color (Discord blurple) */
 }
 ```
 
@@ -120,7 +122,7 @@ pear-remote-controller/
 ## Troubleshooting 🐛
 
 | Issue                    | Solution                                                |
-| ------------------------ | ------------------------------------------------------- |
+|--------------------------|---------------------------------------------------------|
 | "Auth Required" shown    | Check that Pear Desktop is running and has API enabled  |
 | Can't connect from phone | Ensure both devices are on the same Wi-Fi network       |
 | Volume doesn't work      | Some browsers may block audio context; refresh the page |

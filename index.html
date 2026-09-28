@@ -3,21 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta
-      name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      name="viewport"
     />
     <title>YT Music Remote</title>
     <link
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>"
       id="favicon"
       rel="icon"
       type="image/svg+xml"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link href="style.css" rel="stylesheet" />
   </head>
 
   <body>
-    <audio id="silent-audio" loop hidden>
+    <audio hidden id="silent-audio" loop>
       <source
         src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
         type="audio/wav"
@@ -28,31 +28,31 @@
       <!-- Top Volume Bar -->
       <section class="volume-container">
         <button
+          aria-label="Toggle Mute"
           class="btn-mute"
           id="btn-mute"
           title="Toggle Mute"
-          aria-label="Toggle Mute"
         >
           <svg id="icon-vol" viewBox="0 0 24 24"></svg>
         </button>
 
         <input
-          type="range"
-          id="volume-slider"
-          class="volume-slider"
-          min="0"
-          max="100"
-          value="100"
           aria-label="Volume Slider"
+          class="volume-slider"
+          id="volume-slider"
+          max="100"
+          min="0"
+          type="range"
+          value="100"
         />
       </section>
 
       <section class="album-art-container" id="art-container">
         <img
-          id="cover"
-          class="album-art"
           alt="Album Art"
+          class="album-art"
           decoding="async"
+          id="cover"
           src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>"
         />
         <div class="seek-overlay left" id="overlay-left">-10s</div>
@@ -64,40 +64,40 @@
         <p id="artist">Connecting...</p>
       </section>
 
-      <section class="up-next-container" id="up-next-container" hidden>
+      <section class="up-next-container" hidden id="up-next-container">
         Up Next: <span id="up-next-text">...</span>
       </section>
 
       <section class="progress-container" id="progress-container">
         <div
+          aria-label="Seek track position"
           class="progress-bar-wrapper"
           id="progress-bar-wrapper"
           role="slider"
-          aria-label="Seek track position"
         >
           <svg
             class="progress-bar-svg"
-            viewBox="-4 -4 408 36"
             preserveAspectRatio="none"
             shape-rendering="geometricPrecision"
+            viewBox="-4 -4 408 36"
           >
             <defs>
               <!-- Outer clip boundary that locks ends in place -->
               <clipPath id="seek-track-clip">
-                <rect x="0" y="0" width="400" height="28" rx="2" ry="2" />
+                <rect height="28" rx="2" ry="2" width="400" x="0" y="0" />
               </clipPath>
               <!-- Played portion clip mask -->
               <clipPath id="active-clip">
-                <rect id="clip-rect" x="0" y="0" width="0" height="28" />
+                <rect height="28" id="clip-rect" width="0" x="0" y="0" />
               </clipPath>
               <!-- Unplayed portion clip mask -->
               <clipPath id="unplayed-clip">
                 <rect
+                  height="28"
                   id="unplayed-clip-rect"
+                  width="400"
                   x="0"
                   y="0"
-                  width="400"
-                  height="28"
                 />
               </clipPath>
             </defs>
@@ -114,10 +114,10 @@
             <!-- Active Wave Fill Track -->
             <g clip-path="url(#seek-track-clip)">
               <path
-                id="wave-path"
                 class="wave-fill"
                 clip-path="url(#active-clip)"
                 d="M 0 14 L 400 14"
+                id="wave-path"
                 shape-rendering="geometricPrecision"
               />
             </g>
@@ -132,10 +132,10 @@
 
       <section class="controls">
         <button
+          aria-label="Previous Track"
           class="btn"
           id="btn-prev"
           title="Previous"
-          aria-label="Previous Track"
         >
           <svg viewBox="0 0 24 24">
             <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
@@ -143,20 +143,20 @@
         </button>
 
         <button
+          aria-label="Play or Pause Track"
           class="btn btn-primary"
           id="btn-toggle"
           title="Play / Pause"
-          aria-label="Play or Pause Track"
         >
           <svg id="icon-play" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
-          <svg id="icon-pause" viewBox="0 0 24 24" style="display: none">
+          <svg id="icon-pause" style="display: none" viewBox="0 0 24 24">
             <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
           </svg>
         </button>
 
-        <button class="btn" id="btn-next" title="Next" aria-label="Next Track">
+        <button aria-label="Next Track" class="btn" id="btn-next" title="Next">
           <svg viewBox="0 0 24 24">
             <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
           </svg>
@@ -164,6 +164,6 @@
       </section>
     </main>
 
-    <script type="module" src="main.js"></script>
+    <script src="main.js" type="module"></script>
   </body>
 </html>
