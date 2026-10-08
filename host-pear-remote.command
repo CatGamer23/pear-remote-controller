@@ -1,18 +1,37 @@
 #!/bin/bash
+# ==============================================================================
+# Pear Desktop Remote - Runner Script
+# ==============================================================================
+
 # Navigate to the directory where this script is located
 cd "$(dirname "$0")" || exit
 
-# Get local IP address (Wi-Fi interface en0, or ethernet en1)
-PORT=80
-IP=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null)
+PORT=8080
+
+# Clean up lingering background instances safely on exit
+cleanup() {
+    echo -e "\nStopping servers..."
+    kill "$PYTHON_PID" "$CF_PID" 2>/dev/null
+    exit 0
+}
+trap cleanup SIGINT SIGTERM
 
 clear
 echo "=================================================="
-echo " Starting YTM Frontend Server..."
-echo " Open this link on your phone (same Wi-Fi):"
-echo " http://${IP}:${PORT}"
+echo " Starting YTM Remote Proxy & Cloudflare Tunnel... "
 echo "=================================================="
 echo ""
 
-# Start Python HTTP server
-python3 -m http.server $PORT --bind 0.0.0.0
+# Start the separated Python proxy server in the background
+python3 proxy.py &
+PYTHON_PID=$!
+
+# Give the server a moment to spin up
+sleep 1
+
+# Start account-free Cloudflare quick tunnel
+cloudflared tunnel --url "http://localhost:$PORT" &
+CF_PID=$!
+
+# Keep script running
+wait

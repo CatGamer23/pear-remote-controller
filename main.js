@@ -1,6 +1,14 @@
 const API_PORT = 26538;
 const CLIENT_ID = "web_remote_client";
-const BASE_URL = new URL(`http://${window.location.hostname}:${API_PORT}`);
+
+// Dynamically use current page protocol/host, supporting secure connections (HTTPS/WSS) where available
+const isLocal = /^(localhost|127\.|10\.|172\.|192\.)/.test(window.location.hostname);
+const protocol = window.location.protocol === "https:" ? "https:" : "http:";
+const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+
+const BASE_URL = isLocal
+  ? new URL(`${protocol}//${window.location.hostname}:${API_PORT}`)
+  : new URL(`${window.location.protocol}//${window.location.host}`);
 
 // Helper function to clamp numbers cleanly
 const clamp = (val, min = 0, max = 1) => Math.min(Math.max(val, min), max);
@@ -180,19 +188,14 @@ function updateUI(
 }
 
 async function apiFetch(endpoint, method = "GET", body = null) {
-  if (!authToken && !(await ensureAuth())) return null;
+  const headers = { "Content-Type": "application/json" };
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
+  }
 
-  try {
+  return await Promise.try(async () => {
     const targetUrl = new URL(endpoint, BASE_URL);
-    const options = {
-      method,
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      },
-      signal: AbortSignal.timeout(4000),
-    };
-
+    const options = { method, headers, signal: AbortSignal.timeout(4000) };
     if (body) options.body = JSON.stringify(body);
 
     const res = await fetch(targetUrl, options);
@@ -200,15 +203,18 @@ async function apiFetch(endpoint, method = "GET", body = null) {
     if (res.status === 401 || res.status === 403) {
       localStorage.removeItem("pear_auth_token");
       authToken = null;
-      if (await ensureAuth()) return apiFetch(endpoint, method, body);
-      return null;
+      delete headers["Authorization"];
+      return await fetch(targetUrl, options);
     }
 
     return res;
-  } catch {
+  }).catch((err) => {
+    if (Error.isError(err)) {
+      console.error("API Fetch Error:", err.message);
+    }
     updateUI("Offline", "Cannot reach Pear Desktop");
     return null;
-  }
+  });
 }
 
 async function fetchVolumeState() {
@@ -238,12 +244,7 @@ async function fetchNextTrack() {
       let displayText = data.title;
       if (combinedByline) {
         const fullAttempt = `${data.title} • ${combinedByline}`;
-        if (fullAttempt.length <= 45) {
-          displayText = fullAttempt;
-        } else {
-          // If too long, drop the artist and use just the title to prevent overflow cutoff
-          displayText = data.title;
-        }
+        displayText = fullAttempt.length <= 45 ? fullAttempt : data.title;
       }
 
       elements.upNextText.textContent = displayText;
@@ -256,7 +257,7 @@ async function fetchNextTrack() {
 
 async function ensureAuth() {
   if (authToken) return true;
-  try {
+  return await Promise.try(async () => {
     updateUI("Authenticating...", "Approve on Pear Desktop");
     const authUrl = new URL(`/auth/${CLIENT_ID}`, BASE_URL);
     const res = await fetch(authUrl, {
@@ -273,10 +274,14 @@ async function ensureAuth() {
       localStorage.setItem("pear_auth_token", authToken);
       return true;
     }
-  } catch {
+    return false;
+  }).catch((err) => {
+    if (Error.isError(err)) {
+      console.error("Auth Error:", err.message);
+    }
     updateUI("Auth Required", "Approve request on Pear Desktop");
     return false;
-  }
+  });
 }
 
 async function fetchStatus() {
@@ -309,7 +314,8 @@ async function fetchStatus() {
 function connectWebSocket() {
   if (!authToken) return;
 
-  const wsUrl = `ws://${BASE_URL.hostname}:${API_PORT}/api/v1/ws?token=${authToken}`;
+  const wsHost = isLocal ? `${window.location.hostname}:${API_PORT}` : BASE_URL.host;
+  const wsUrl = `${wsProtocol}//${wsHost}/api/v1/ws?token=${authToken}`;
   ws = new WebSocket(wsUrl);
 
   ws.onopen = () => {
